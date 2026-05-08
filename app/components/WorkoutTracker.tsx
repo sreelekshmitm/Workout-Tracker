@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import WorkoutForm from "./WorkoutForm";
 import WorkoutStats from "./WorkoutStats";
 import WorkoutList from "./WorkoutList";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 // TypeScript Type
 export type Exercise = {
@@ -69,6 +70,15 @@ export default function WorkoutTracker() {
         );
     };
 
+    // clear completed
+    const clearCompleted = () => {
+        const updatedExercises = exercises.filter(
+            (item) => !item.completed
+        );
+
+        setExercises(updatedExercises);
+    };
+
     // Completed Count
     const completedCount = exercises.filter(
         (item) => item.completed
@@ -107,27 +117,50 @@ export default function WorkoutTracker() {
                 />
 
                 {/* Filter */}
-                <div className="flex gap-3 text-black mb-6">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+                    <div className="flex gap-3 text-black">
+
+                        <button
+                            onClick={() => setFilter("all")}
+                            className={`px-4 py-2 rounded border transition ${filter === "all"
+                                ? "bg-primary text-white border-primary"
+                                : "border-primary text-primary hover:bg-primary hover:text-white"
+                                }`}
+                        >
+                            All
+                        </button>
+
+                        <button
+                            onClick={() => setFilter("completed")}
+                            className={`px-4 py-2 rounded border transition ${filter === "completed"
+                                ? "bg-success text-white border-success"
+                                : "border-success text-success hover:bg-success hover:text-white"
+                                }`}
+                        >
+                            Completed
+                        </button>
+
+                        <button
+                            onClick={() => setFilter("pending")}
+                            className={`px-4 py-2 rounded border transition ${filter === "pending"
+                                ? "bg-warning text-white border-warning"
+                                : "border-warning text-warning hover:bg-warning hover:text-white"
+                                }`}
+                        >
+                            Pending
+                        </button>
+
+                    </div>
+
+                    {/* Clear Completed Button */}
                     <button
-                        onClick={() => setFilter("all")}
-                        className="px-4 py-2 border rounded"
+                        onClick={clearCompleted}
+                        className="flex items-center gap-2 px-4 py-2 rounded border border-danger text-danger hover:bg-danger hover:text-white transition"
                     >
-                        All
+                        <RiDeleteBin6Line size={18} />
+                        Clear Completed
                     </button>
 
-                    <button
-                        onClick={() => setFilter("completed")}
-                        className="px-4 py-2 border rounded"
-                    >
-                        Completed
-                    </button>
-
-                    <button
-                        onClick={() => setFilter("pending")}
-                        className="px-4 py-2 border rounded"
-                    >
-                        Pending
-                    </button>
                 </div>
 
                 <WorkoutList
@@ -138,7 +171,7 @@ export default function WorkoutTracker() {
 
                 <p className="text-center text-gray-500 mt-10">
                     Data is saved in local storage. <span className="text-black">It should persist after refresh.</span>
-                    
+
                 </p>
             </div>
         </main>
